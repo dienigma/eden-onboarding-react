@@ -1,14 +1,15 @@
-import React from 'react';
+import { forwardRef } from 'react';
 
-const Input = (props) => {
+const Input = forwardRef((props, ref) => {
   return (
     <input
       {...props}
+      ref={ref}
       className={`${props.className} border ${
         props.error ? 'border-rose-300' : 'border-light-gray'
-      } outline-none rounded p-2 text-[12px] placeholder:text-light-gray placeholder:font-bold`}
+      } outline-none rounded p-2 text-[10px] placeholder:text-light-gray`}
     />
   );
-};
+});
 
 export default Input;
