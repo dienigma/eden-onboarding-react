@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import Label from './FormUI/Label';
-import Input from './FormUI/Input';
+import React, { useState } from 'react';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
-import LargeBtn from './LargeBtn';
-import { FaUserAlt, FaUsers } from 'react-icons/fa';
 import { AiFillCheckCircle } from 'react-icons/ai';
+import { FaUserAlt, FaUsers } from 'react-icons/fa';
 import BreadCrumb from './BreadCrumb';
+import Input from './FormUI/Input';
+import Label from './FormUI/Label';
 import { FormSubtitle, FormTitle, SelectionCard } from './Fragments';
+import LargeBtn from './LargeBtn';
 
 const OnboardingForm = (props) => {
   const [step, setStep] = useState(1);

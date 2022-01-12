@@ -12,7 +12,7 @@ const BreadCrumb = ({ currentStep }) => {
       aria-label="Progress"
       className="flex items-center justify-center mt-4 mb-16 cursor-default"
     >
-      <ol role="list" className="flex items-center">
+      <ol className="flex items-center">
         {steps.map((step, stepIdx) => {
           const isDone =
             (currentStep === 1 && parseInt(step.name) === currentStep) ||
