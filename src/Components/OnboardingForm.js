@@ -4,6 +4,9 @@ import Input from './FormUI/Input';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 import LargeBtn from './LargeBtn';
 import { FaUserAlt, FaUsers } from 'react-icons/fa';
+import { AiFillCheckCircle } from 'react-icons/ai';
+import BreadCrumb from './BreadCrumb';
+import { FormSubtitle, FormTitle, SelectionCard } from './Fragments';
 
 const OnboardingForm = (props) => {
   const [step, setStep] = useState(1);
@@ -21,36 +24,37 @@ const OnboardingForm = (props) => {
       return;
     }
     setStep(step + 1);
-    console.log(step);
   };
   return (
-    <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(onSubmit)}>
-        {step === 1 && <StepOne />}
-        {step === 2 && <StepTwo />}
-        {step === 3 && <StepThree />}
-        {step === 4 && <StepFour />}
-        <LargeBtn
-          type="submit"
-          text="Create Workspace"
-          className="w-full mt-4"
-        />
-      </form>
-    </FormProvider>
+    <>
+      <BreadCrumb currentStep={step} />
+      <FormProvider {...methods}>
+        <form onSubmit={methods.handleSubmit(onSubmit)} className="mx-8">
+          {step === 1 && <StepOne />}
+          {step === 2 && <StepTwo />}
+          {step === 3 && <StepThree />}
+          {step === 4 && <StepFour />}
+          <LargeBtn
+            type="submit"
+            text={
+              step === 4
+                ? `Launch ${methods.watch('workspaceName')}`
+                : 'Create Workspace'
+            }
+            className="w-full mt-4"
+          />
+        </form>
+      </FormProvider>
+    </>
   );
 };
 
 const StepOne = () => {
   const { register, formState } = useFormContext();
-
   return (
     <>
-      <h3 className="font-bold text-[24px] text-center">
-        Welcome! First things first...
-      </h3>
-      <p className="text-light-gray text-[12px] text-center">
-        You can always change them later
-      </p>
+      <FormTitle text="Welcome! First things first..." />
+      <FormSubtitle text="You can always change them later" />
       <Label name="Full Name" className="mb-4 mt-4">
         <Input
           type="text"
@@ -77,12 +81,8 @@ const StepTwo = () => {
   const { register, formState } = useFormContext();
   return (
     <>
-      <h3 className="font-bold text-[24px] text-center">
-        Let's set up a home for all your work
-      </h3>
-      <p className="text-light-gray text-[12px] text-center">
-        You can always create another workspace later.
-      </p>
+      <FormTitle text="Let's set up a home for all your work" />
+      <FormSubtitle text="You can always create another workspace later." />
       <Label name="Workspace Name" className="mb-4 mt-4">
         <Input
           type="text"
@@ -98,7 +98,7 @@ const StepTwo = () => {
             www.eden.com/
           </span>
           <Input
-            type="url"
+            type="text"
             {...register('workspaceURL')}
             placeholder="Example"
             className="w-full rounded-none rounded-tr rounded-br"
@@ -114,48 +114,33 @@ const StepThree = () => {
   const { register, setValue } = useFormContext();
   const [active, setActive] = useState(null);
 
-  const mouseOverClass =
-    'hover:border-accent focus:border-accent active:border-accent checked:border-accent';
-
   return (
     <>
-      <h3 className="font-bold text-[24px] text-center">
-        How are you planning to use Eden?
-      </h3>
-      <p className="text-light-gray text-[12px] text-center">
-        We'll streamline your setup experience accordingly.
-      </p>
+      <FormTitle text="How are you planning to use Eden?" />
+      <FormSubtitle text="We'll streamline your setup experience accordingly." />
       <div className="flex items-center gap-x-2 justify-center my-4 cursor-pointer">
-        <div
+        <SelectionCard
+          activeKey={1}
+          currentActive={active}
           onClick={() => {
             setActive(1);
             setValue('purpose', 'self');
           }}
-          className={`border ${
-            active === 1 && 'border-accent'
-          } shadow-lg rounded  flex flex-col justify-center h-[150px] w-[150px] ${mouseOverClass} p-4 gap-y-2`}
-        >
-          <FaUserAlt />
-          <p className="font-bold text-[12px]">For myself</p>
-          <p className="text-light-gray text-[12px] text-left">
-            Write better. Think more clearly. Stay organized.
-          </p>
-        </div>
-        <div
+          icon={<FaUserAlt />}
+          title="For myself"
+          subTitle="Write better. Think more clearly. Stay organized."
+        />
+        <SelectionCard
+          activeKey={1}
+          currentActive={active}
           onClick={() => {
             setActive(2);
             setValue('purpose', 'team');
           }}
-          className={`border ${
-            active === 2 && 'border-accent'
-          } shadow-lg rounded  flex flex-col justify-center h-[150px] w-[150px] ${mouseOverClass} p-4 gap-y-2`}
-        >
-          <FaUsers />
-          <p className="font-bold text-[12px]">With my team</p>
-          <p className="text-light-gray text-[12px] text-left">
-            Wikis, docs, tasks & projects, all in one place.
-          </p>
-        </div>
+          icon={<FaUsers />}
+          title="With my team"
+          subTitle="Wikis, docs, tasks & projects, all in one place."
+        />
       </div>
       <input type="hidden" {...register('purpose', { required: true })} />
     </>
@@ -163,11 +148,12 @@ const StepThree = () => {
 };
 
 const StepFour = () => {
+  const { watch } = useFormContext();
   return (
-    <div>
-      <p>Tick mark icon</p>
-      <p>Congratulations, Eren!</p>
-      <p>You have completed onboarding, you can start using the Eden!</p>
+    <div className="flex flex-col justify-center gap-y-4 items-center">
+      <AiFillCheckCircle color="#5a4ad1" size={'3em'} />
+      <FormTitle text={`Congratulations, ${watch('displayName')}`} />
+      <FormSubtitle text="You have completed onboarding, you can start using the Eden!" />
     </div>
   );
 };
