@@ -131,7 +131,7 @@ const StepThree = () => {
           subTitle="Write better. Think more clearly. Stay organized."
         />
         <SelectionCard
-          activeKey={1}
+          activeKey={2}
           currentActive={active}
           onClick={() => {
             setActive(2);
