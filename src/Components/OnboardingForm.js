@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Label from './FormUI/Label';
 import Input from './FormUI/Input';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 import LargeBtn from './LargeBtn';
+import { FaUserAlt, FaUsers } from 'react-icons/fa';
 
 const OnboardingForm = (props) => {
   const [step, setStep] = useState(1);
@@ -14,8 +15,11 @@ const OnboardingForm = (props) => {
     workspaceURL: '',
   });
 
-  const onSubmit = (_data) => {
-    if (step === 4) return;
+  const onSubmit = (data) => {
+    if (step === 4) {
+      console.log(data);
+      return;
+    }
     setStep(step + 1);
     console.log(step);
   };
@@ -25,6 +29,7 @@ const OnboardingForm = (props) => {
         {step === 1 && <StepOne />}
         {step === 2 && <StepTwo />}
         {step === 3 && <StepThree />}
+        {step === 4 && <StepFour />}
         <LargeBtn
           type="submit"
           text="Create Workspace"
@@ -88,13 +93,18 @@ const StepTwo = () => {
         />
       </Label>
       <Label name="workspaceURL" isOptional={true}>
-        <Input
-          type="url"
-          {...register('workspaceURL')}
-          placeholder="steve"
-          className="w-full"
-          error={!!formState.errors.workspaceURL}
-        />
+        <div className="flex">
+          <span className="border bg-lighter-gray flex items-center justify-center w-1/2 border-light-gray text-[10px] text-light-gray rounded-tl rounded-bl">
+            www.eden.com/
+          </span>
+          <Input
+            type="url"
+            {...register('workspaceURL')}
+            placeholder="Example"
+            className="w-full rounded-none rounded-tr rounded-br"
+            error={!!formState.errors.workspaceURL}
+          />
+        </div>
       </Label>
     </>
   );
@@ -103,6 +113,7 @@ const StepTwo = () => {
 const StepThree = () => {
   const { register, setValue } = useFormContext();
   const [active, setActive] = useState(null);
+
   const mouseOverClass =
     'hover:border-accent focus:border-accent active:border-accent checked:border-accent';
 
@@ -120,22 +131,44 @@ const StepThree = () => {
             setActive(1);
             setValue('purpose', 'self');
           }}
-          className={`border shadow-lg rounded  flex items-center justify-center h-[150px] w-[150px] ${mouseOverClass}`}
+          className={`border ${
+            active === 1 && 'border-accent'
+          } shadow-lg rounded  flex flex-col justify-center h-[150px] w-[150px] ${mouseOverClass} p-4 gap-y-2`}
         >
-          Card 1
+          <FaUserAlt />
+          <p className="font-bold text-[12px]">For myself</p>
+          <p className="text-light-gray text-[12px] text-left">
+            Write better. Think more clearly. Stay organized.
+          </p>
         </div>
         <div
           onClick={() => {
             setActive(2);
             setValue('purpose', 'team');
           }}
-          className={`border shadow-lg rounded  flex items-center justify-center h-[150px] w-[150px] ${mouseOverClass}`}
+          className={`border ${
+            active === 2 && 'border-accent'
+          } shadow-lg rounded  flex flex-col justify-center h-[150px] w-[150px] ${mouseOverClass} p-4 gap-y-2`}
         >
-          Card 2
+          <FaUsers />
+          <p className="font-bold text-[12px]">With my team</p>
+          <p className="text-light-gray text-[12px] text-left">
+            Wikis, docs, tasks & projects, all in one place.
+          </p>
         </div>
       </div>
       <input type="hidden" {...register('purpose', { required: true })} />
     </>
+  );
+};
+
+const StepFour = () => {
+  return (
+    <div>
+      <p>Tick mark icon</p>
+      <p>Congratulations, Eren!</p>
+      <p>You have completed onboarding, you can start using the Eden!</p>
+    </div>
   );
 };
 
